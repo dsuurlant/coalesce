@@ -1,5 +1,9 @@
 resources:
     App\Entity\User:
+        collectionOperations:
+            get: ~
+        itemOperations:
+            get: ~
         attributes:
             normalization_context:
                 groups: ['read']

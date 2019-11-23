@@ -1,6 +1,11 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+# Permanently redirect index to API doc
+index:
+    path: /
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction
+    defaults:
+        path: /api
+        permanent: true
+
 
 api_login_check:
-  path: /api/login_check
+    path: /api/login_check

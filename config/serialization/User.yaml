@@ -1,0 +1,8 @@
+App\Entity\User:
+    attributes:
+        id:
+            groups: ['read']
+        username:
+            groups: ['read', 'write']
+        password:
+            groups: ['write']

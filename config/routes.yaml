@@ -6,6 +6,5 @@ index:
         path: /api
         permanent: true
 
-
 api_login_check:
     path: /api/login_check

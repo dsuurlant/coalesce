@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace App\Test;
 
+use App\Entity\User;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Connection;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -35,6 +40,29 @@ class FunctionalTest extends WebTestCase
         $connection       = self::$kernel->getContainer()->get('doctrine.dbal.default_connection');
         $this->connection = $connection;
         $this->connection->beginTransaction();
+    }
+
+    /**
+     * Helper function to add authorization to the test client.
+     */
+    protected function setUpAuth(): void
+    {
+        /** @var ManagerRegistry $doctrine */
+        $doctrine = self::$kernel->getContainer()->get('doctrine');
+        $users = $doctrine->getRepository(User::class)->findAll();
+
+        if (count($users) === 0) {
+            throw new RuntimeException(
+                'Add users to the test database first by running "doctrine:fixtures:load" before running your tests.'
+            );
+        }
+        $user = reset($users);
+
+        /** @var JWTTokenManagerInterface $jwtManager */
+        $jwtManager = self::$kernel->getContainer()->get('lexik_jwt_authentication.jwt_manager');
+        $token = $jwtManager->create($user);
+
+        $this->client->setServerParameter('HTTP_AUTHORIZATION', sprintf('Bearer %s', $token));
     }
 
     public function tearDown(): void

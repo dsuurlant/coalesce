@@ -4,6 +4,7 @@ namespace App\Tests\Functional;
 
 use App\Entity\User;
 use App\Test\FunctionalTest;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -22,6 +23,8 @@ final class UserTest extends FunctionalTest
     public function setUp(): void
     {
         parent::setUp();
+        $this->setUpAuth();
+
         $this->doctrine = self::$kernel->getContainer()->get('doctrine');
     }
 
@@ -40,9 +43,17 @@ final class UserTest extends FunctionalTest
 
     public function testUserCanRegister(): void
     {
-        $register = ['username' => 'testuser@example.com', 'password' => 'testpassword'];
+        $register = [
+            'username' => sprintf('%s@example.org', bin2hex(random_bytes(16))),
+            'password' => 'testpassword'
+        ];
         $this->client->request('POST', '/api/register', [], [], [], json_encode($register, JSON_THROW_ON_ERROR));
-        dump($this->client->getResponse());
+        $response = $this->client->getResponse();
+
+        self::assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
+        $user = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertArrayHasKey('id', $user);
+        self::assertArrayHasKey('username', $user);
     }
 
     public function testInviteAUserToConnect()

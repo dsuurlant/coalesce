@@ -9,3 +9,13 @@ resources:
                 groups: ['read']
             denormalization_context:
                 groups: ['write']
+
+    App\Message\Register:
+        collectionOperations:
+            post:
+                status: 200
+                path: /register
+        itemOperations: []
+        attributes:
+            messenger: true
+            output: false

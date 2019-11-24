@@ -12,8 +12,7 @@ final class RegisterHandler implements MessageHandlerInterface
 {
     public function __invoke(Register $register)
     {
-        dump($register);
-        die;
+        die('im here');
     }
 
 }

@@ -42,6 +42,7 @@ final class UserTest extends FunctionalTest
     {
         $register = ['username' => 'testuser@example.com', 'password' => 'testpassword'];
         $this->client->request('POST', '/api/register', [], [], [], json_encode($register, JSON_THROW_ON_ERROR));
+        dump($this->client->getResponse());
     }
 
     public function testInviteAUserToConnect()

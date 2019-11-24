@@ -13,9 +13,9 @@ resources:
     App\Message\Register:
         collectionOperations:
             post:
-                status: 200
+                status: 201
                 path: /register
         itemOperations: []
         attributes:
             messenger: true
-            output: false
+            output: App\Entity\User

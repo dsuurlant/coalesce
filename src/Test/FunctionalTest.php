@@ -37,7 +37,7 @@ class FunctionalTest extends WebTestCase
             ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json']
         );
 
-        $connection       = self::$kernel->getContainer()->get('doctrine.dbal.default_connection');
+        $connection = self::$kernel->getContainer()->get('doctrine.dbal.default_connection');
         $this->connection = $connection;
         $this->connection->beginTransaction();
     }
@@ -51,10 +51,8 @@ class FunctionalTest extends WebTestCase
         $doctrine = self::$kernel->getContainer()->get('doctrine');
         $users = $doctrine->getRepository(User::class)->findAll();
 
-        if (count($users) === 0) {
-            throw new RuntimeException(
-                'Add users to the test database first by running "doctrine:fixtures:load" before running your tests.'
-            );
+        if (0 === count($users)) {
+            throw new RuntimeException('Add users to the test database first by running "doctrine:fixtures:load" before running your tests.');
         }
         $user = reset($users);
 

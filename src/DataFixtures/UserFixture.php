@@ -27,7 +27,7 @@ final class UserFixture extends Fixture
     {
         $faker = Factory::create();
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; ++$i) {
             $user = new User();
             $user->setUsername($faker->email);
             $user->setPassword(

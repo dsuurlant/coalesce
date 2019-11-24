@@ -6,3 +6,12 @@ App\Message\Register:
         password:
             - NotBlank: ~
             - Length: { min: 8, max: 50 }
+
+App\Message\Invite:
+    properties:
+        userId:
+            - NotBlank: ~
+            - Uuid: ~
+            - App\Validator\Constraints\UniqueConnection: ~
+        message:
+            - NotBlank: ~

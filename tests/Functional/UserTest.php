@@ -1,10 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Tests\Functional;
 
 use App\Entity\User;
 use App\Test\FunctionalTest;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -45,7 +46,7 @@ final class UserTest extends FunctionalTest
     {
         $register = [
             'username' => sprintf('%s@example.org', bin2hex(random_bytes(16))),
-            'password' => 'testpassword'
+            'password' => 'testpassword',
         ];
         $this->client->request('POST', '/api/register', [], [], [], json_encode($register, JSON_THROW_ON_ERROR));
         $response = $this->client->getResponse();
@@ -56,8 +57,13 @@ final class UserTest extends FunctionalTest
         self::assertArrayHasKey('username', $user);
     }
 
-    public function testInviteAUserToConnect()
+    public function testInviteAUserToConnect(): void
     {
-        $this->markTestIncomplete();
+        $users = $this->doctrine->getRepository(User::class)->findAll();
+
+        $invite = [
+            'userId' => '',
+            'message' => 'Want to be my friend?'
+        ];
     }
 }

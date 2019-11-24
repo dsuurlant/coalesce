@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 final class User implements UserInterface
 {
     /**
-     * @var UuidInterface
+     * @var string
      */
     private $id;
 
@@ -28,12 +28,24 @@ final class User implements UserInterface
      */
     private $password;
 
+    /**
+     * @var ArrayCollection
+     */
+    private $myConnections;
+
+    /**
+     * @var ArrayCollection
+     */
+    private $connectedToMe;
+
     public function __construct()
     {
-        $this->id = Uuid::uuid4();
+        $this->id = Uuid::uuid4()->toString();
+        $this->myConnections = new ArrayCollection();
+        $this->connectedToMe = new ArrayCollection();
     }
 
-    public function getId(): UuidInterface
+    public function getId(): string
     {
         return $this->id;
     }
@@ -71,5 +83,29 @@ final class User implements UserInterface
     public function eraseCredentials(): void
     {
         return;
+    }
+
+    public function getMyConnections(): ArrayCollection
+    {
+        return $this->myConnections;
+    }
+
+    public function setMyConnections(ArrayCollection $myConnections): self
+    {
+        $this->myConnections = $myConnections;
+
+        return $this;
+    }
+
+    public function getConnectedToMe(): ArrayCollection
+    {
+        return $this->connectedToMe;
+    }
+
+    public function setConnectedToMe(ArrayCollection $connectedToMe): self
+    {
+        $this->connectedToMe = $connectedToMe;
+
+        return $this;
     }
 }

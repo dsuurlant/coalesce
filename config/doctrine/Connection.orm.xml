@@ -1,0 +1,24 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Entity\Connection" table="connection" repository-class="App\Repository\ConnectionRepository">
+        <id name="id" column="id" type="guid" />
+
+        <id name="userA" association-key="true"/>
+
+        <id name="userB" association-key="true"/>
+
+        <field name="status" type="string" />
+
+        <many-to-one target-entity="App\Entity\User" field="userA" inversed-by="myConnections">
+            <join-column name="userA" referenced-column-name="id"/>
+        </many-to-one>
+
+        <many-to-one target-entity="App\Entity\User" field="userB" inversed-by="connectedToMe">
+            <join-column name="userB" referenced-column-name="id"/>
+        </many-to-one>
+
+    </entity>
+
+</doctrine-mapping>

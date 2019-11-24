@@ -19,3 +19,14 @@ resources:
         attributes:
             messenger: true
             output: App\Entity\User
+
+    App\Message\Invite:
+        collectionOperations:
+            post:
+                status: 200
+                path: /invite
+                security: is_granted('ROLE_USER')
+        itemOperations: []
+        attributes:
+            messenger: true
+            output: App\Entity\Connection

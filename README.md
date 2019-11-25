@@ -72,6 +72,12 @@ bin/console doctrine:database:create --env=test
 bin/console doctrine:migrations:migrate --env=test
 ```
 
+Load the fixtures:
+
+```
+bin/console doctrine:fixtures:load
+```
+
 Run the application tests:
 
 ```

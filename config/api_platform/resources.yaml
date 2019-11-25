@@ -1,6 +1,7 @@
 resources:
     App\Entity\User:
         collectionOperations:
+            get: ~
             user_connections:
                 method: GET
                 path: /users/{id}/connections

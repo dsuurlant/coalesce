@@ -65,6 +65,13 @@ When using the OpenAPI frontend, you can click the 'Authorize' button on the top
 
 # Tests
 
+Create the test database:
+
+```
+bin/console doctrine:database:create --env=test
+bin/console doctrine:migrations:migrate --env=test
+```
+
 Run the application tests:
 
 ```

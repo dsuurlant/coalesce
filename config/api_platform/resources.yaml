@@ -1,14 +1,24 @@
 resources:
     App\Entity\User:
         collectionOperations:
-            get: ~
+            user_connections:
+                method: GET
+                path: /users/{id}/connections
+                controller: App\Controller\UserConnections
+                read: false
         itemOperations:
             get: ~
         attributes:
             normalization_context:
                 groups: ['read']
-            denormalization_context:
-                groups: ['write']
+
+    App\Entity\Connection:
+        collectionOperations: []
+        itemOperations:
+            get: ~
+        attributes:
+            normalization_context:
+                groups: ['read']
 
     App\Message\Register:
         collectionOperations:

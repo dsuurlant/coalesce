@@ -6,6 +6,7 @@ namespace App\Tests\Functional;
 
 use App\Entity\User;
 use App\Test\FunctionalTest;
+use RuntimeException;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -35,6 +36,10 @@ final class UserTest extends FunctionalTest
 
         $users = $this->doctrine->getRepository(User::class)->findAll();
 
+        if (0 === count($users)) {
+            throw new RuntimeException('There are no users in the database; make sure to run "doctrine:fixtures:load" first to set up the test database.');
+        }
+
         $response = $this->client->getResponse();
         self::assertEquals(Response::HTTP_OK, $response->getStatusCode());
 
@@ -57,13 +62,20 @@ final class UserTest extends FunctionalTest
         self::assertArrayHasKey('username', $user);
     }
 
-    public function testInviteAUserToConnect(): void
+    public function testUserCanInviteAUserToConnect(): void
     {
-        $users = $this->doctrine->getRepository(User::class)->findAll();
+        $inviteUser = $this->createUser('invitee@example.org', 'testpass');
 
         $invite = [
-            'userId' => '',
-            'message' => 'Want to be my friend?'
+            'userId' => $inviteUser->getId(),
+            'message' => 'Want to be my friend?',
         ];
+
+        $this->client->request('POST', '/api/invite', [], [], [], json_encode($invite, JSON_THROW_ON_ERROR));
+        $response = $this->client->getResponse();
+
+        self::assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $connection = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertArrayHasKey('id', $connection);
     }
 }

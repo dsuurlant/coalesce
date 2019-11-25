@@ -1,0 +1,10 @@
+App\Entity\Connection:
+    attributes:
+        id:
+            groups: ['read']
+        userA:
+            groups: ['read']
+        userB:
+            groups: ['read']
+        status:
+            groups: ['read']

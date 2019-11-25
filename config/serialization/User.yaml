@@ -3,6 +3,4 @@ App\Entity\User:
         id:
             groups: ['read']
         username:
-            groups: ['read', 'write']
-        password:
-            groups: ['write']
+            groups: ['read']

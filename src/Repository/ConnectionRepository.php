@@ -31,14 +31,29 @@ final class ConnectionRepository extends ServiceEntityRepository
             ->createQueryBuilder('c')
             ->where('c.userA = :userA AND c.userB = :userB')
             ->orWhere('c.userB = :userA AND c.userA = :userB')
-            ->setParameter('userA', $userA)
-            ->setParameter('userB', $userB)
+            ->setParameters(
+                [
+                    'userA' => $userA,
+                    'userB' => $userB,
+                ]
+            )
             ->setMaxResults(1);
 
         try {
             return $qb->getQuery()->getOneOrNullResult();
-        } catch (NonUniqueResultException | Error $e) {
+        } catch (NonUniqueResultException $e) {
             return null;
         }
+    }
+
+    public function findConnectionsForUser(User $user): array
+    {
+        $qb = $this
+            ->createQueryBuilder('c')
+            ->where('c.userA = :user')
+            ->orWhere('c.userB = :user')
+            ->setParameter('user', $user);
+
+        return $qb->getQuery()->getResult();
     }
 }

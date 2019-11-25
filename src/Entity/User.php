@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @author Daniëlle Suurlant <danielle.suurlant@gmail.com>
  */
-final class User implements UserInterface
+class User implements UserInterface
 {
     /**
      * @var string
@@ -29,12 +30,12 @@ final class User implements UserInterface
     private $password;
 
     /**
-     * @var ArrayCollection
+     * @var Collection
      */
     private $myConnections;
 
     /**
-     * @var ArrayCollection
+     * @var Collection
      */
     private $connectedToMe;
 
@@ -85,24 +86,24 @@ final class User implements UserInterface
         return;
     }
 
-    public function getMyConnections(): ArrayCollection
+    public function getMyConnections(): Collection
     {
         return $this->myConnections;
     }
 
-    public function setMyConnections(ArrayCollection $myConnections): self
+    public function setMyConnections(Collection $myConnections): self
     {
         $this->myConnections = $myConnections;
 
         return $this;
     }
 
-    public function getConnectedToMe(): ArrayCollection
+    public function getConnectedToMe(): Collection
     {
         return $this->connectedToMe;
     }
 
-    public function setConnectedToMe(ArrayCollection $connectedToMe): self
+    public function setConnectedToMe(Collection $connectedToMe): self
     {
         $this->connectedToMe = $connectedToMe;
 

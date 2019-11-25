@@ -7,11 +7,10 @@ namespace App\Test;
 use App\Entity\User;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Connection;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
-use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * Makes sure the tests occur in a transaction.
@@ -47,20 +46,30 @@ class FunctionalTest extends WebTestCase
      */
     protected function setUpAuth(): void
     {
-        /** @var ManagerRegistry $doctrine */
-        $doctrine = self::$kernel->getContainer()->get('doctrine');
-        $users = $doctrine->getRepository(User::class)->findAll();
-
-        if (0 === count($users)) {
-            throw new RuntimeException('Add users to the test database first by running "doctrine:fixtures:load" before running your tests.');
-        }
-        $user = reset($users);
+        $user = $this->createUser('testuser@example.org', 'testpass');
 
         /** @var JWTTokenManagerInterface $jwtManager */
         $jwtManager = self::$kernel->getContainer()->get('lexik_jwt_authentication.jwt_manager');
         $token = $jwtManager->create($user);
 
         $this->client->setServerParameter('HTTP_AUTHORIZATION', sprintf('Bearer %s', $token));
+    }
+
+    protected function createUser(string $username, string $password): User
+    {
+        /** @var ManagerRegistry $doctrine */
+        $doctrine = self::$kernel->getContainer()->get('doctrine');
+        /** @var UserPasswordEncoderInterface $encoder */
+        $encoder = self::$kernel->getContainer()->get('security.password_encoder');
+
+        $user = new User();
+        $user->setUsername($username);
+        $user->setPassword($encoder->encodePassword($user, $password));
+
+        $doctrine->getManager()->persist($user);
+        $doctrine->getManager()->flush();
+
+        return $user;
     }
 
     public function tearDown(): void
